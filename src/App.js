@@ -8,7 +8,6 @@ import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Storage from "./pages/Storage";
 import Realtime from "./pages/Realtime";
-import TestConnection from "./pages/TestConnection";
 import UploadImage from "./pages/UploadImage";
 import SignUp from "./components/SignUp";
 
@@ -22,7 +21,6 @@ function App() {
   return (
     <Router>
       <Navbar />
-      <TestConnection />
       <Routes>
         <Route path="/auth/signup" element={<SignUp />} />
         <Route path="/auth/login" element={<Login />} />
