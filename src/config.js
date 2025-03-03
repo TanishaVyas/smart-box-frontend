@@ -1,2 +1,1 @@
-const API_BASE_URL = "https://smart-box.onrender.com";
-export default API_BASE_URL;
+export const API_BASE_URL = "https://smart-box.onrender.com";
