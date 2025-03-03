@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { API_BASE_URL } from "../config";
 //import "./Storage.css";
 
 const Storage = () => {
@@ -14,7 +15,7 @@ const Storage = () => {
           return;
         }
 
-        const response = await fetch("http://localhost:3000/storage/images", {
+        const response = await fetch(`${API_BASE_URL}/storage/images`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
