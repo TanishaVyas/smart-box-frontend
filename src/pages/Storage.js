@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { API_BASE_URL } from "../config";
 //import "./Storage.css";
 
 const Storage = () => {
@@ -15,13 +14,16 @@ const Storage = () => {
           return;
         }
 
-        const response = await fetch(`${API_BASE_URL}/storage/images`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "https://smart-box.onrender.com/storage/images",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         const data = await response.json();
 

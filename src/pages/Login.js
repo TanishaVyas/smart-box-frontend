@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../config";
 import "./Login.css";
 
 const Login = () => {
@@ -16,13 +15,16 @@ const Login = () => {
     setError(null);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password, device: deviceId }),
-      });
+      const response = await fetch(
+        "https://smart-box.onrender.com/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password, device: deviceId }),
+        }
+      );
 
       const data = await response.json();
 

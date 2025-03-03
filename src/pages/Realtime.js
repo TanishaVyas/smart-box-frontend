@@ -19,7 +19,7 @@ const Realtime = () => {
         }
 
         const response = await fetch(
-          "http://localhost:3000/storage/latest-image",
+          "https://smart-box.onrender.com/storage/latest-image",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
