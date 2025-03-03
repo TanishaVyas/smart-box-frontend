@@ -4,7 +4,7 @@ const TestConnection = () => {
   const [message, setMessage] = useState("Checking connection...");
 
   useEffect(() => {
-    fetch("http://localhost:3000/test-connection")
+    fetch("https://smart-box.onrender.com/test-connection")
       .then((res) => res.json())
       .then((data) => setMessage(data.message))
       .catch((err) => setMessage("Connection failed: " + err.message));

@@ -8,7 +8,6 @@ import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Storage from "./pages/Storage";
 import Realtime from "./pages/Realtime";
-import UploadImage from "./pages/UploadImage";
 import SignUp from "./components/SignUp";
 
 // Protected Route Component
