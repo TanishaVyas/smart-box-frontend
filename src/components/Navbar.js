@@ -14,7 +14,7 @@ const Navbar = () => {
     <nav style={styles.navbar}>
       <div style={styles.navbarContainer}>
         {/* Logo */}
-        <div style={styles.logo}>Nilima ka Dabba</div>
+        <div style={styles.logo}>Smart Bag</div>
 
         {/* Navigation Links (Only if logged in) */}
         <div style={styles.navLinks}>

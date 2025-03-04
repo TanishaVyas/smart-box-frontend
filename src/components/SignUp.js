@@ -49,7 +49,7 @@ const SignUp = () => {
   return (
     <div style={styles.container}>
       <div style={styles.signupBox}>
-        <h1 style={styles.logo}>Nilima Ka Dabba</h1>
+        <h1 style={styles.logo}>Smart Bag</h1>
 
         <input
           type="text"
