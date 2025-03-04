@@ -26,11 +26,14 @@ const SignUp = () => {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:3000/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, deviceId }),
-      });
+      const response = await fetch(
+        "https://smart-box.onrender.com/auth/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password, deviceId }),
+        }
+      );
 
       const data = await response.json();
 
