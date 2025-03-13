@@ -9,6 +9,8 @@ import Login from "./pages/Login";
 import Storage from "./pages/Storage";
 import Realtime from "./pages/Realtime";
 import SignUp from "./components/SignUp";
+import Profile from "./pages/profile";
+import Settings from "./components/Settings";
 
 // Protected Route Component
 const ProtectedRoute = ({ element }) => {
@@ -33,6 +35,10 @@ function App() {
           path="/storage/realtime"
           element={<ProtectedRoute element={<Realtime />} />}
         />
+        <Route
+          path="/setting"
+          element={<ProtectedRoute element={<Settings />} />}
+        ></Route>
       </Routes>
     </Router>
   );

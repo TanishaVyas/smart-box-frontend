@@ -52,58 +52,50 @@ const SignUp = () => {
   return (
     <div style={styles.container}>
       <div style={styles.signupBox}>
-        <h1 style={styles.logo}>Smart Bag</h1>
-
+        <h1 style={styles.logoText}>Smart-Box</h1>
         <input
           type="text"
           placeholder="Full Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          style={styles.inputBox}
+          style={styles.input}
         />
-
         <input
-          type="text"
-          placeholder="Phone number, username, or email"
+          type="email"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          style={styles.inputBox}
+          style={styles.input}
         />
-
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          style={styles.inputBox}
+          style={styles.input}
         />
-
         <input
           type="password"
           placeholder="Confirm Password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          style={styles.inputBox}
+          style={styles.input}
         />
-
         <input
           type="text"
           placeholder="Device ID"
           value={deviceId}
           onChange={(e) => setDeviceId(e.target.value)}
-          style={styles.inputBox}
+          style={styles.input}
         />
-
-        {error && <p style={styles.errorText}>{error}</p>}
-
-        <button onClick={handleSignUp} style={styles.signupButton}>
+        {error && <p style={styles.error}>{error}</p>}
+        <button onClick={handleSignUp} style={styles.button} disabled={loading}>
           {loading ? "Signing Up..." : "Sign Up"}
         </button>
       </div>
-
       <div style={styles.loginBox}>
         Already have an account?{" "}
-        <span onClick={() => navigate("/auth/login")} style={styles.loginLink}>
+        <span style={styles.loginLink} onClick={() => navigate("/auth/login")}>
           Log in
         </span>
       </div>
@@ -117,97 +109,68 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    height: "100%",
-    backgroundColor: "#000",
+    minHeight: "100vh",
+    backgroundColor: "#F0F2F5", // Soft Grey
+    padding: "20px",
   },
   signupBox: {
-    backgroundColor: "#111",
-    padding: "40px",
-    borderRadius: "10px",
+    background: "#FFFFFF",
+    padding: "25px",
+    borderRadius: "12px",
+    boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)",
+    width: "100%",
+    maxWidth: "340px",
     textAlign: "center",
-    width: "350px",
-    border: "1px solid #262626",
   },
-  logo: {
-    fontFamily: "'Pacifico', cursive",
-    fontSize: "36px",
-    color: "white",
-    marginBottom: "10px",
-  },
-  text: {
-    color: "#ccc",
-    fontSize: "14px",
+  logoText: {
+    fontSize: "24px",
+    fontWeight: "bold",
+    color: "#4A90E2", // Soft Blue
     marginBottom: "20px",
   },
-  inputBox: {
+  input: {
     width: "100%",
     padding: "12px",
     margin: "8px 0",
-    border: "1px solid #262626",
-    backgroundColor: "#222",
-    color: "white",
-    borderRadius: "5px",
+    border: "1px solid #D1D5DB",
+    borderRadius: "8px",
+    fontSize: "16px",
+    backgroundColor: "#F9FAFB",
+    outline: "none",
+    transition: "border-color 0.3s",
   },
-  signupButton: {
+  button: {
     width: "100%",
-    padding: "10px",
-    backgroundColor: "#0095f6",
+    padding: "12px",
+    background: "#4A90E2", // Soft Blue
     border: "none",
     color: "white",
     fontSize: "16px",
-    borderRadius: "5px",
+    fontWeight: "bold",
+    borderRadius: "8px",
     cursor: "pointer",
-    marginTop: "10px",
+    marginTop: "12px",
+    transition: "background 0.3s ease",
   },
-  orDivider: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: "15px 0",
+  buttonHover: {
+    background: "#357ABD",
   },
-  line: {
-    height: "1px",
-    width: "40%",
-    backgroundColor: "#262626",
-  },
-  orText: {
-    color: "#888",
-    margin: "0 10px",
-  },
-  fbButton: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "transparent",
-    color: "#0095f6",
-    border: "none",
-    cursor: "pointer",
-    fontSize: "14px",
-    width: "100%",
-    marginTop: "10px",
-  },
-  fbLogo: {
-    width: "20px",
-    marginRight: "8px",
-  },
-  loginBox: {
-    color: "white",
-    textAlign: "center",
-    marginTop: "15px",
-    padding: "15px",
-    backgroundColor: "#111",
-    border: "1px solid #262626",
-    width: "350px",
-    borderRadius: "5px",
-  },
-  loginLink: {
-    color: "#0095f6",
-    cursor: "pointer",
-  },
-  errorText: {
+  error: {
     color: "red",
     fontSize: "14px",
     marginBottom: "10px",
+  },
+  loginBox: {
+    color: "#333",
+    textAlign: "center",
+    marginTop: "15px",
+    padding: "10px",
+    fontSize: "14px",
+  },
+  loginLink: {
+    color: "#4A90E2",
+    cursor: "pointer",
+    fontWeight: "bold",
   },
 };
 

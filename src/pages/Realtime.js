@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import "./Realtime.css";
 
 const Realtime = () => {
   const [latestImage, setLatestImage] = useState(null);
@@ -9,7 +8,7 @@ const Realtime = () => {
   useEffect(() => {
     const fetchLatestImage = async () => {
       try {
-        setError(null); // Reset error on new request
+        setError(null);
         const token = localStorage.getItem("token");
 
         if (!token) {
@@ -41,7 +40,7 @@ const Realtime = () => {
     };
 
     fetchLatestImage();
-    const interval = setInterval(fetchLatestImage, 5000); // Refresh every 5 sec
+    const interval = setInterval(fetchLatestImage, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -54,7 +53,7 @@ const Realtime = () => {
       {error && <p style={styles.errorText}>{error}</p>}
 
       {latestImage ? (
-        <div style={styles.imageContainer}>
+        <div style={styles.imageCard}>
           <img
             src={`data:image/jpeg;base64,${latestImage.image}`}
             alt="Latest"
@@ -73,45 +72,53 @@ const Realtime = () => {
 
 const styles = {
   container: {
-    backgroundColor: "#000",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
     minHeight: "100vh",
+    background: "linear-gradient(to bottom right, #e3eaf5, #cfd8dc)", // Subtle blue-grey gradient
     padding: "20px",
-    color: "white",
-    textAlign: "center",
   },
   heading: {
-    color: "#fff",
-    fontSize: "24px",
+    color: "#37474f",
+    fontSize: "clamp(22px, 3vw, 32px)",
+    fontWeight: "bold",
     marginBottom: "20px",
   },
   loadingText: {
-    color: "#888",
-    fontSize: "16px",
+    color: "#607d8b",
+    fontSize: "clamp(14px, 2vw, 18px)",
   },
   errorText: {
-    color: "red",
-    fontSize: "16px",
+    color: "#d32f2f",
+    fontSize: "clamp(14px, 2vw, 18px)",
   },
-  imageContainer: {
-    backgroundColor: "#121212",
-    padding: "15px",
+  imageCard: {
+    background: "#ffffff",
+    padding: "12px",
     borderRadius: "10px",
-    display: "inline-block",
+    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+    textAlign: "center",
+    maxWidth: "90%",
+    transition: "transform 0.2s ease-in-out",
   },
   latestImage: {
     width: "100%",
-    maxWidth: "500px",
+    maxWidth: "clamp(280px, 80vw, 600px)",
     height: "auto",
-    borderRadius: "8px",
+    borderRadius: "10px",
+    transition: "transform 0.3s ease",
   },
   timestamp: {
-    fontSize: "12px",
-    color: "#aaa",
+    fontSize: "clamp(12px, 1.5vw, 16px)",
+    color: "#546e7a",
     marginTop: "5px",
   },
   noImageText: {
-    color: "#888",
-    fontSize: "18px",
+    color: "#78909c",
+    fontSize: "clamp(16px, 2vw, 20px)",
+    textAlign: "center",
   },
 };
 

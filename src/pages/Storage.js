@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-//import "./Storage.css";
+import { useNavigate } from "react-router-dom";
 
 const Storage = () => {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [filter, setFilter] = useState("1W"); // Default: Last 1 week
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -28,7 +30,36 @@ const Storage = () => {
         const data = await response.json();
 
         if (response.ok) {
-          setImages(data);
+          let filteredImages = data;
+
+          const now = new Date();
+          filteredImages = data.map((img) => ({
+            ...img,
+            timestamp: new Date(img.timestamp),
+          }));
+
+          switch (filter) {
+            case "1W":
+              filteredImages = filteredImages.filter(
+                (img) => now - img.timestamp <= 7 * 24 * 60 * 60 * 1000
+              );
+              break;
+            case "1M":
+              filteredImages = filteredImages.filter(
+                (img) => now - img.timestamp <= 30 * 24 * 60 * 60 * 1000
+              );
+              break;
+            case "1Y":
+              filteredImages = filteredImages.filter(
+                (img) => now - img.timestamp <= 365 * 24 * 60 * 60 * 1000
+              );
+              break;
+            default:
+              break;
+          }
+
+          filteredImages.sort((a, b) => b.timestamp - a.timestamp);
+          setImages(filteredImages);
         } else {
           console.error("Error fetching images:", data.message);
         }
@@ -38,11 +69,32 @@ const Storage = () => {
     };
 
     fetchImages();
-  }, [token]);
+  }, [token, filter]);
 
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>Stored Images</h2>
+
+      {/* Filter Buttons */}
+      <div style={styles.filterButtons}>
+        {[
+          { label: "1 Week", value: "1W" },
+          { label: "1 Month", value: "1M" },
+          { label: "1 Year", value: "1Y" },
+          { label: "All", value: "ALL" },
+        ].map((btn) => (
+          <button
+            key={btn.value}
+            style={
+              filter === btn.value ? styles.activeFilterBtn : styles.filterBtn
+            }
+            onClick={() => setFilter(btn.value)}
+          >
+            {btn.label}
+          </button>
+        ))}
+      </div>
+
       <div style={styles.imageGrid}>
         {images.length > 0 ? (
           images.map((imgObj, index) => (
@@ -54,7 +106,7 @@ const Storage = () => {
                 onClick={() => setSelectedImage(imgObj.image)}
               />
               <p style={styles.timestamp}>
-                Captured on: {new Date(imgObj.timestamp).toLocaleString()}
+                Captured on: {imgObj.timestamp.toLocaleString()}
               </p>
             </div>
           ))
@@ -63,7 +115,6 @@ const Storage = () => {
         )}
       </div>
 
-      {/* Modal for enlarged image */}
       {selectedImage && (
         <div style={styles.modal} onClick={() => setSelectedImage(null)}>
           <div style={styles.modalContent}>
@@ -81,28 +132,61 @@ const Storage = () => {
 
 const styles = {
   container: {
-    backgroundColor: "#000",
-    minHeight: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: "100vh",
+    backgroundColor: "#F5F7FA", // Light grey background
     padding: "20px",
-    color: "white",
-    textAlign: "center",
   },
   heading: {
-    color: "#fff",
-    fontSize: "24px",
+    color: "#333",
+    fontSize: "clamp(22px, 3vw, 28px)",
+    fontWeight: "bold",
     marginBottom: "20px",
+  },
+  filterButtons: {
+    display: "flex",
+    gap: "12px",
+    marginBottom: "20px",
+  },
+  filterBtn: {
+    padding: "8px 14px",
+    borderRadius: "20px",
+    border: "1px solid #007BFF",
+    backgroundColor: "transparent",
+    color: "#007BFF",
+    cursor: "pointer",
+    fontSize: "14px",
+    fontWeight: "bold",
+    transition: "all 0.3s",
+  },
+  activeFilterBtn: {
+    padding: "8px 14px",
+    borderRadius: "20px",
+    border: "none",
+    backgroundColor: "#007BFF",
+    color: "white",
+    cursor: "pointer",
+    fontSize: "14px",
+    fontWeight: "bold",
   },
   imageGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-    gap: "20px",
+    gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+    gap: "10px",
     justifyContent: "center",
+    width: "100%",
+    maxWidth: "600px",
   },
   imageCard: {
-    backgroundColor: "#121212",
+    background: "white",
     padding: "10px",
     borderRadius: "10px",
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
     textAlign: "center",
+    transition: "transform 0.2s ease-in-out",
   },
   storedImage: {
     width: "100%",
@@ -111,14 +195,19 @@ const styles = {
     cursor: "pointer",
     transition: "transform 0.3s",
   },
+  storedImageHover: {
+    transform: "scale(1.05)",
+  },
   timestamp: {
-    fontSize: "12px",
-    color: "#aaa",
+    fontSize: "13px",
+    color: "#607d8b",
     marginTop: "5px",
   },
   noImages: {
-    color: "#888",
+    color: "#78909c",
     fontSize: "18px",
+    textAlign: "center",
+    fontWeight: "bold",
   },
   modal: {
     position: "fixed",
@@ -126,18 +215,24 @@ const styles = {
     left: 0,
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    padding: "20px",
   },
   modalContent: {
     maxWidth: "90%",
     maxHeight: "90%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   modalImage: {
-    width: "100%",
+    width: "auto",
+    maxWidth: "90%",
     height: "auto",
+    maxHeight: "90%",
     borderRadius: "10px",
   },
 };
