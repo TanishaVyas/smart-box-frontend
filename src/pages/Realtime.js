@@ -2,45 +2,62 @@ import { useState, useEffect } from "react";
 
 const Realtime = () => {
   const [latestImage, setLatestImage] = useState(null);
+  const [analogValue, setAnalogValue] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [deviceId, setDeviceId] = useState(null); // Store deviceId
 
   useEffect(() => {
-    const fetchLatestImage = async () => {
+    const fetchData = async () => {
       try {
         setError(null);
         const token = localStorage.getItem("token");
+        const storedDeviceId = localStorage.getItem("deviceId"); // Assume deviceId is stored after login
 
-        if (!token) {
+        if (!token || !storedDeviceId) {
           setError("Unauthorized access. Please log in.");
           setLoading(false);
           return;
         }
 
-        const response = await fetch(
-          "https://smart-box.onrender.com/storage/latest-image",
+        setDeviceId(storedDeviceId);
+
+        // Fetch latest image
+        const imageResponse = await fetch(
+          `https://smart-box.onrender.com/storage/latest-image`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+        const imageData = await imageResponse.json();
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to fetch latest image");
+        if (!imageResponse.ok) {
+          throw new Error(imageData.message || "Failed to fetch latest image");
         }
 
-        setLatestImage(data);
+        setLatestImage(imageData);
+
+        // Fetch latest analog value
+        const analogResponse = await fetch(
+          `https://smart-box.onrender.com/analog/${storedDeviceId}`
+        );
+        const analogData = await analogResponse.json();
+
+        if (analogResponse.ok) {
+          setAnalogValue(analogData.value);
+        } else {
+          setAnalogValue(null);
+        }
       } catch (err) {
-        console.error("Error fetching latest image:", err);
+        console.error("Error fetching data:", err);
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchLatestImage();
-    const interval = setInterval(fetchLatestImage, 5000);
+    fetchData();
+    const interval = setInterval(fetchData, 5000); // Fetch data every 5 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -49,7 +66,7 @@ const Realtime = () => {
     <div style={styles.container}>
       <h2 style={styles.heading}>Latest Image</h2>
 
-      {loading && <p style={styles.loadingText}>Fetching latest image...</p>}
+      {loading && <p style={styles.loadingText}>Fetching latest data...</p>}
       {error && <p style={styles.errorText}>{error}</p>}
 
       {latestImage ? (
@@ -61,6 +78,14 @@ const Realtime = () => {
           />
           <p style={styles.timestamp}>
             Captured on: {new Date(latestImage.timestamp).toLocaleString()}
+          </p>
+          <p style={styles.analogValue}>
+            Analog Value:{" "}
+            {analogValue !== null ? (
+              <span style={styles.analogNumber}>{analogValue}</span>
+            ) : (
+              <span style={styles.noAnalog}>Value not received</span>
+            )}
           </p>
         </div>
       ) : (
@@ -77,7 +102,7 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     minHeight: "100vh",
-    background: "linear-gradient(to bottom right, #e3eaf5, #cfd8dc)", // Subtle blue-grey gradient
+    background: "linear-gradient(to bottom right, #e3eaf5, #cfd8dc)", // Soft blue-grey gradient
     padding: "20px",
   },
   heading: {
@@ -114,6 +139,18 @@ const styles = {
     fontSize: "clamp(12px, 1.5vw, 16px)",
     color: "#546e7a",
     marginTop: "5px",
+  },
+  analogValue: {
+    fontSize: "clamp(14px, 1.8vw, 20px)",
+    fontWeight: "bold",
+    color: "#37474f",
+    marginTop: "8px",
+  },
+  analogNumber: {
+    color: "#388e3c", // Green for valid analog values
+  },
+  noAnalog: {
+    color: "#d32f2f", // Red if no value is received
   },
   noImageText: {
     color: "#78909c",
