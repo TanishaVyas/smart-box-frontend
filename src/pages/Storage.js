@@ -1,6 +1,17 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+const reverseBase64Twice = (base64String) => {
+  // Decode the base64 string once
+  const decodedOnce = atob(base64String);
+  
+  // Decode again the decoded string (reverse the second encoding)
+  const decodedTwice = atob(decodedOnce);
+  
+  // Return the final base64 string with proper data URL format
+  return `data:image/jpeg;base64,${btoa(decodedTwice)}`;
+};
+
 const Storage = () => {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -28,7 +39,7 @@ const Storage = () => {
         );
 
         const data = await response.json();
-
+        console.log(data);
         if (response.ok) {
           let filteredImages = data;
 
@@ -100,7 +111,7 @@ const Storage = () => {
           images.map((imgObj, index) => (
             <div key={index} style={styles.imageCard}>
               <img
-                src={`data:image/jpeg;base64,${imgObj.image}`}
+                src={reverseBase64Twice(imgObj.image)} // Decode base64 twice
                 alt={`Image ${index}`}
                 style={styles.storedImage}
                 onClick={() => setSelectedImage(imgObj.image)}
@@ -119,7 +130,7 @@ const Storage = () => {
         <div style={styles.modal} onClick={() => setSelectedImage(null)}>
           <div style={styles.modalContent}>
             <img
-              src={`data:image/jpeg;base64,${selectedImage}`}
+              src={reverseBase64Twice(selectedImage)} // Decode base64 twice for enlarged image
               alt="Enlarged"
               style={styles.modalImage}
             />
@@ -130,6 +141,7 @@ const Storage = () => {
   );
 };
 
+  
 const styles = {
   container: {
     display: "flex",
