@@ -78,7 +78,6 @@ const Realtime = () => {
       <h2 style={styles.heading}>Latest Image</h2>
 
       {loading && <p style={styles.loadingText}>Fetching latest data...</p>}
-      {error && <p style={styles.errorText}>{error}</p>}
 
       {latestImage ? (
         <div style={styles.imageCard}>
