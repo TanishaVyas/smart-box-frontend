@@ -1,5 +1,16 @@
 import { useState, useEffect } from "react";
 
+const reverseBase64Twice = (base64String) => {
+  // Decode the base64 string once
+  const decodedOnce = atob(base64String);
+
+  // Decode again the decoded string (reverse the second encoding)
+  const decodedTwice = atob(decodedOnce);
+
+  // Return the final base64 string with proper data URL format
+  return `data:image/jpeg;base64,${btoa(decodedTwice)}`;
+};
+
 const Realtime = () => {
   const [latestImage, setLatestImage] = useState(null);
   const [analogValue, setAnalogValue] = useState(null);
@@ -72,7 +83,7 @@ const Realtime = () => {
       {latestImage ? (
         <div style={styles.imageCard}>
           <img
-            src={`data:image/jpeg;base64,${latestImage.image}`}
+            src={reverseBase64Twice(latestImage.image)}
             alt="Latest"
             style={styles.latestImage}
           />
