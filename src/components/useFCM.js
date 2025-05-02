@@ -11,6 +11,7 @@ const FCMSetup = () => {
             vapidKey:
               "BJzHsF9mIi9Si3F7YwcbSQenOO-O1o6jTrR-JNFU2hWYdchHUmMXwy32TrkszURUPHUmN5m747y70S4NbCb6Rwk", // from Firebase Console (Cloud Messaging > Web Push Certificates)
           });
+          const deviceId = localStorage.getItem("deviceId");
 
           if (token) {
             console.log("FCM Token:", token);
@@ -21,7 +22,7 @@ const FCMSetup = () => {
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ token }),
+              body: JSON.stringify({ token, deviceId }),
             });
           } else {
             console.warn("No registration token available.");
