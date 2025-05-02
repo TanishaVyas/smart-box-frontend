@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerPush } from "../components/push-notifications";
+import registerFcmToken from "../components/registerFcmToken";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -29,7 +29,7 @@ const Login = () => {
       if (response.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("deviceId", deviceId);
-        registerPush(deviceId);
+        await registerFcmToken();
         navigate("/storage/images");
       } else {
         setError(data.message || "Invalid credentials");

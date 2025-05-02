@@ -11,6 +11,7 @@ import Realtime from "./pages/Realtime";
 import SignUp from "./components/SignUp";
 import Profile from "./pages/profile";
 import Settings from "./components/Settings";
+import FCMSetup from "./components/useFCM";
 
 // Protected Route Component
 const ProtectedRoute = ({ element }) => {
@@ -21,6 +22,7 @@ const ProtectedRoute = ({ element }) => {
 function App() {
   return (
     <Router>
+      <FCMSetup />
       <Navbar />
       <Routes>
         <Route path="/auth/signup" element={<SignUp />} />

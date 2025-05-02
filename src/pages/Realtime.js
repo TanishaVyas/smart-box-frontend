@@ -18,6 +18,80 @@ const Realtime = () => {
   const [loading, setLoading] = useState(true);
   const [deviceId, setDeviceId] = useState(null); // Store deviceId
 
+  const THRESHOLD = 200;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setError(null);
+        const token = localStorage.getItem("token");
+        const storedDeviceId = localStorage.getItem("deviceId");
+
+        if (!token || !storedDeviceId) {
+          setError("Unauthorized access. Please log in.");
+          setLoading(false);
+          return;
+        }
+
+        setDeviceId(storedDeviceId);
+
+        // Fetch image
+        const imageResponse = await fetch(
+          `https://smart-box.onrender.com/storage/latest-image`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const imageData = await imageResponse.json();
+
+        if (!imageResponse.ok)
+          throw new Error(imageData.message || "Image fetch failed");
+
+        setLatestImage(imageData);
+
+        // Fetch analog value
+        const analogResponse = await fetch(
+          `https://smart-box.onrender.com/analog/${storedDeviceId}`
+        );
+        const analogData = await analogResponse.json();
+
+        if (analogResponse.ok) {
+          setAnalogValue(analogData.value);
+
+          // 🔔 Trigger notification if analog value > threshold
+          if (analogData.value < THRESHOLD) {
+            await fetch(
+              "https://smart-box.onrender.com/api/send-notification",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  deviceId: localStorage.getItem("deviceId"),
+                  title: "Alert: new item added",
+                  body: `Analog reading (${analogData.value}).`,
+                }),
+              }
+            );
+          }
+        } else {
+          setAnalogValue(null);
+        }
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
