@@ -246,6 +246,7 @@ const styles = {
     height: "auto",
     maxHeight: "90%",
     borderRadius: "10px",
+    transform: "rotate(180deg)",
   },
 };
 
