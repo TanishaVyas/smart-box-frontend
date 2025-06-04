@@ -218,6 +218,7 @@ const styles = {
     height: "auto",
     borderRadius: "10px",
     transition: "transform 0.3s ease",
+    transform: "rotate(180deg)",
   },
   timestamp: {
     fontSize: "clamp(12px, 1.5vw, 16px)",

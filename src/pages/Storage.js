@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 const reverseBase64Twice = (base64String) => {
   // Decode the base64 string once
   const decodedOnce = atob(base64String);
-  
+
   // Decode again the decoded string (reverse the second encoding)
   const decodedTwice = atob(decodedOnce);
-  
+
   // Return the final base64 string with proper data URL format
   return `data:image/jpeg;base64,${btoa(decodedTwice)}`;
 };
@@ -141,7 +141,6 @@ const Storage = () => {
   );
 };
 
-  
 const styles = {
   container: {
     display: "flex",
@@ -206,6 +205,7 @@ const styles = {
     borderRadius: "8px",
     cursor: "pointer",
     transition: "transform 0.3s",
+    transform: "rotate(180deg)",
   },
   storedImageHover: {
     transform: "scale(1.05)",
